@@ -22,7 +22,7 @@ mkdir build
 * Go to the build directory and run following commands to build the project.
 ```bash
 cd build
-cmake ..
+cmake .
 make
 ./src/main
 ```
