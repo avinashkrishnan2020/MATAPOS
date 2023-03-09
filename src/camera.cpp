@@ -22,10 +22,10 @@ void Camera::prepareForDecoding(cv::Mat &frame) {
  	imageScanner.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
 
  	// convert frame to gray image
- 	cvtColor(frame, grayImage,zbar::CV_BGR2GRAY);
+ 	cvtColor(frame, grayImage,cv::CV_BGR2GRAY);
 
  	// zbarImageWrapper
- 	zbarImageWrapper = image(frame.cols, frame.rows, "Y800", (uchar *)grayImage.data, frame.cols * frame.rows);
+ 	zbarImageWrapper(frame.cols, frame.rows, "Y800", (uchar *)grayImage.data, frame.cols * frame.rows);
 
 }
 
@@ -36,7 +36,7 @@ void Camera::decodeQRAndBarcode(cv::Mat &frame) {
   // Scan the image for barcodes and QRCodes
   //int n = imageScanner.scan(frame);
  
-  for(Image::SymbolIterator symbol = frame.symbol_begin(); symbol != frame.symbol_end(); ++symbol)
+  for(zbar::Image::SymbolIterator symbol = zbarImageWrapper.symbol_begin(); symbol != zbarImageWrapper.symbol_end(); ++symbol)
   {
     Code code;
  
@@ -45,8 +45,8 @@ void Camera::decodeQRAndBarcode(cv::Mat &frame) {
  
  	#ifdef DEBUG
 	    // Print code type and decoded value
-	    std::cout << std::endl << "Type : " << code.type << endl;
-	    std::cout << std::endl << "Data : " << code.data << endl;
+	    std::cout << std::endl << "Type : " << code.type << std::endl;
+	    std::cout << std::endl << "Data : " << code.data << std::endl;
  	#endif
  
     decodedEntities.push_back(code);
