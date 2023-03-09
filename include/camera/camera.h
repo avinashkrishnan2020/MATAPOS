@@ -16,7 +16,7 @@
 typedef struct{
   std::string type;
   std::string data;
-  std::vector <std::Point> location;
+  std::vector <cv::Point> location;
 } Code;
 
 
@@ -54,7 +54,7 @@ private:
 	std::vector<Code> decodedEntities;
 	
 	// zbar image scanner
-  	ImageScanner image scanner;
+  	ImageScanner imageScanner;
 	
 	// gray image for decoding
 	cv::Mat grayImage;

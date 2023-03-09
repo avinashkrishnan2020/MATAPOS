@@ -15,8 +15,9 @@
 #include <opencv2/core.hpp>
 #include <opencv2/opencv.hpp>
 #include <iostream>
+#include <zbar.h>
 
-Camera::prepareForDecoding(cv::Mat &frame) {
+void Camera::prepareForDecoding(cv::Mat &frame) {
 	// configure zbar image scanner
  	imageScanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);
 
@@ -28,7 +29,7 @@ Camera::prepareForDecoding(cv::Mat &frame) {
 
 }
 
-Camera::void decodeQRAndBarcode(cv::Mat &frame) {
+void Camera::decodeQRAndBarcode(cv::Mat &frame) {
  	
   prepareForDecoding(frame);
  
