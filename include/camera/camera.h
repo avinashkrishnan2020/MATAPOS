@@ -11,6 +11,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
+#include <zbar.h>
 
 
 typedef struct{
@@ -54,13 +55,13 @@ private:
 	std::vector<Code> decodedEntities;
 	
 	// zbar image scanner
-  	ImageScanner imageScanner;
+  	zbar::ImageScanner imageScanner;
 	
 	// gray image for decoding
 	cv::Mat grayImage;
 
 	// zbar image wrapper
-	Image zbarImageWrapper;
+	zbar::Image zbarImageWrapper;
 
 	int isRunning = 0;
 	int deviceId;
