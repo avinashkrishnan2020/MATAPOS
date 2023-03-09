@@ -16,10 +16,47 @@
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
+Camera::prepareForDecoding(cv::Mat &frame) {
+	// configure zbar image scanner
+ 	imageScanner.set_config(ZBAR_NONE, ZBAR_CFG_ENABLE, 1);
+
+ 	// convert frame to gray image
+ 	cvtColor(frame, grayImage,CV_BGR2GRAY);
+
+ 	// zbarImageWrapper
+ 	zbarImageWrapper = image(frame.cols, frame.rows, "Y800", (uchar *)grayImage.data, frame.cols * frame.rows);
+
+}
+
+Camera::void decodeQRAndBarcode(cv::Mat &frame) {
+ 	
+  prepareForDecoding(frame);
+ 
+  // Scan the image for barcodes and QRCodes
+  int n = imageScanner.scan(frame);
+ 
+  for(Image::SymbolIterator symbol = frame.symbol_begin(); symbol != image.symbol_end(); ++symbol)
+  {
+    Code code;
+ 
+    code.type = symbol->get_type_name();
+    code.data = symbol->get_data();
+ 
+ 	#ifdef DEBUG
+	    // Print code type and decoded value
+	    std::cout << std::endl << "Type : " << code.type << endl;
+	    std::cout << std::endl << "Data : " << code.data << endl;
+ 	#endif
+ 
+    decodedEntities.push_back(code);
+  }
+}
+
 
 Camera::Camera(int deviceId, int apiId) {
 	deviceId = deviceId;
 	apiId = apiId;
+
 }
 
 Camera::Camera() {
@@ -60,6 +97,10 @@ void Camera::runCamera() {
         
 		//qrDecoderCallback(frame);
 
+		// Find and decode barcodes and QR codes
+		decodeQRAndBarcode(frame);
+
+
 	}
 }
 
@@ -71,7 +112,7 @@ void Camera::start() {
 
 	if(videoCapture.isOpened()) {
 		
-		ifdef DEBUG
+		#ifdef DEBUG
 			std::cout << std::endl << "Camera opened successfully!" << std::endl;
 		#endif
 		

@@ -12,6 +12,14 @@
 #include <opencv2/core.hpp>
 #include <opencv2/videoio.hpp>
 
+
+typedef struct{
+  std::string type;
+  std::string data;
+  std::vector <std::Point> location;
+} Code;
+
+
 class Camera {
 
 public:
@@ -37,8 +45,23 @@ public:
 	// qrcode decode callback
 	void qrDecoderCallback(cv::Mat frame);
 
+	void decodeQRAndBarcode(cv::Mat &frame);
+
+	void prepareForDecoding(cv::Mat &frame);
+
 private:
+
+	std::vector<Code> decodedEntities;
 	
+	// zbar image scanner
+  	ImageScanner image scanner;
+	
+	// gray image for decoding
+	cv::Mat grayImage;
+
+	// zbar image wrapper
+	Image zbarImageWrapper;
+
 	int isRunning = 0;
 	int deviceId;
 	int apiId;
