@@ -31,8 +31,16 @@ void Camera::prepareForDecoding(cv::Mat &frame) {
 
 void Camera::decodeQRAndBarcode(cv::Mat &frame) {
  	
-  prepareForDecoding(frame);
+  //prepareForDecoding(frame);
  
+ // configure zbar image scanner
+ 	imageScanner.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
+
+ 	// convert frame to gray image
+ 	cvtColor(frame, grayImage, cv::COLOR_BGR2GRAY);
+
+ 	// zbarImageWrapper
+ 	zbarImageWrapper = (zbar::Image)(frame.cols, frame.rows, "Y800", (uchar *)grayImage.data, frame.cols * frame.rows);
   // Scan the image for barcodes and QRCodes
   //int n = imageScanner.scan(frame);
  
