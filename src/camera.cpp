@@ -22,7 +22,7 @@ void Camera::prepareForDecoding(cv::Mat &frame) {
  	imageScanner.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
 
  	// convert frame to gray image
- 	cvtColor(frame, grayImage,COLOR_BGR2GRAY);
+ 	cvtColor(frame, grayImage, cv::COLOR_BGR2GRAY);
 
  	// zbarImageWrapper
  	zbarImageWrapper = (zbar::Image)(frame.cols, frame.rows, "Y800", (uchar *)grayImage.data, frame.cols * frame.rows);
