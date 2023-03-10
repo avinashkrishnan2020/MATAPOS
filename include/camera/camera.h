@@ -55,13 +55,13 @@ private:
 	std::vector<Code> decodedEntities;
 	
 	// zbar image scanner
-  	zbar::ImageScanner imageScanner;
+  	// zbar::ImageScanner imageScanner;
 	
 	// gray image for decoding
-	cv::Mat grayImage;
+	//cv::Mat grayImage;
 
 	// zbar image wrapper
-	zbar::Image zbarImageWrapper;
+	// zbar::Image zbarImageWrapper;
 
 	int isRunning = 0;
 	int deviceId;

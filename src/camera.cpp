@@ -17,48 +17,44 @@
 #include <iostream>
 #include <zbar.h>
 
-void Camera::prepareForDecoding(cv::Mat &frame) {
-	// configure zbar image scanner
- 	imageScanner.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
-
- 	// convert frame to gray image
- 	cvtColor(frame, grayImage, cv::COLOR_BGR2GRAY);
-
- 	// zbarImageWrapper
- 	zbarImageWrapper = (zbar::Image)(frame.cols, frame.rows, "Y800", (uchar *)grayImage.data, frame.cols * frame.rows);
-
-}
 
 void Camera::decodeQRAndBarcode(cv::Mat &frame) {
  	
-  //prepareForDecoding(frame);
+	//prepareForDecoding(frame);
  
- // configure zbar image scanner
+	// configure zbar image scanner
+	zbar::ImageScanner imageScanner;
  	imageScanner.set_config(zbar::ZBAR_NONE, zbar::ZBAR_CFG_ENABLE, 1);
 
  	// convert frame to gray image
+ 	cv::Mat grayImage;
  	cvtColor(frame, grayImage, cv::COLOR_BGR2GRAY);
 
- 	// zbarImageWrapper
- 	zbarImageWrapper = (zbar::Image)(frame.cols, frame.rows, "Y800", (uchar *)grayImage.data, frame.cols * frame.rows);
-  // Scan the image for barcodes and QRCodes
-  //int n = imageScanner.scan(frame);
- 
-  for(zbar::Image::SymbolIterator symbol = zbarImageWrapper.symbol_begin(); symbol != zbarImageWrapper.symbol_end(); ++symbol)
-  {
-    Code code;
- 
-    code.type = symbol->get_type_name();
-    code.data = symbol->get_data();
- 
- 	#ifdef DEBUG
-	    // Print code type and decoded value
-	    std::cout << std::endl << "Type : " << code.type << std::endl;
-	    std::cout << std::endl << "Data : " << code.data << std::endl;
- 	#endif
- 
-    decodedEntities.push_back(code);
-  }
+	  // zbarImageWrapper
+	  zbar::Image zbarImageWrapper(frame.cols, frame.rows, "Y800", (uchar *)grayImage.data, frame.cols * frame.rows);
+	  // Scan the image for barcodes and QRCodes
+	  int n = imageScanner.scan(zbarImageWrapper);
+	 
+	  for(zbar::Image::SymbolIterator symbol = zbarImageWrapper.symbol_begin(); symbol != zbarImageWrapper.symbol_end(); ++symbol)
+	  {
+		Code code;
+	 
+		code.type = symbol->get_type_name();
+		code.data = symbol->get_data();
+	 
+		#ifdef DEBUG
+			// Print code type and decoded value
+			std::cout << std::endl << "Type : " << code.type << std::endl;
+			std::cout << std::endl << "Data : " << code.data << std::endl;
+		#endif
+	 
+		
+		
+		for(int i=0; i<symbol->get_location_size(); i++){
+				code.location.push_back(cv::Point(symbol->get_location_x(i), symbol->get_location_y(i)));
+		}
+		decodedEntities.push_back(code);
+	  }
 }
 
 
