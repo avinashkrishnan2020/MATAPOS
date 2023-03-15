@@ -1,11 +1,12 @@
-#include<LoadCell.h>
-#include<stdio.h>
-#include<unistd.h>
-#include<fcntl.h>
+#include "loadcell/LoadCell.h"
 
-#include<iostream>
-#include<thread>
-#include<pigpio.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#include <iostream>
+#include <thread>
+#include <pigpio.h>
 
 
 int LoadCell::isReady(int data_pin) // checks if the HX711 is ready to provide data
@@ -17,7 +18,7 @@ int LoadCell::isReady(int data_pin) // checks if the HX711 is ready to provide d
 void LoadCell::ReadLoadCell() // define code to read the data from the Load Cell ADC converter HX711
 {
 	
-	int data = 0; // the data variable will store the data gathered from the read operation
+	unsigned long data = 0; // the data variable will store the data gathered from the read operation
 
 	// selecting the PI pins for data and clock signals
 	int data_pin = 5;
@@ -25,10 +26,10 @@ void LoadCell::ReadLoadCell() // define code to read the data from the Load Cell
 	uint32_t t1 = 100,t3 = 30, t4 = 50, tout = 0; // t1 is initial delay of clock signal, t3 is the delay for high input (max 50 micro sec), t4 is delay for low input
 	
 	//initializing the gpio
-	if (gpioInitialize() < 0)
+	if (gpioInitialise() < 0)
 	{
 		std::cout << "GPIO cannot be initialized";
-		return();
+		return ;
 	}
 	
 	// setting the pin modes
@@ -37,14 +38,14 @@ void LoadCell::ReadLoadCell() // define code to read the data from the Load Cell
 
 	while (!isReady(data_pin) && running) // waiting for the load cell to be ready to give data
 	{
-		std::cout << "Waiting for load cell to be ready with data";
+		std::cout << "Waiting for load cell to be ready with data " << std::endl;
 
 	}
 	
 
 	//sending 25 clock pulses to set the gain to 128 in the following for loop
 
-	for (int i = 0; i < 25; i++)
+	/*for (int i = 0; i < 25; i++)
 	{
 		//added gpio delay to simulate wave between both writes 
 
@@ -56,7 +57,7 @@ void LoadCell::ReadLoadCell() // define code to read the data from the Load Cell
 
 		gpioWrite(clock_pin, 0);
 
-	}
+	}*/
 
 	
 
@@ -73,12 +74,19 @@ void LoadCell::ReadLoadCell() // define code to read the data from the Load Cell
 
 			gpioWrite(clock_pin, 1);
 
-			data = data + gpioRead(data_pin);
+			//data = data + gpioRead(data_pin);
+			
 			data = data << 1;
 
 			tout = gpioDelay(t3);
 
 			gpioWrite(clock_pin, 0);
+			
+			if(gpioRead(data_pin))
+			{
+				data++;
+				}
+			
 
 		}
 
@@ -94,7 +102,7 @@ void LoadCell::ReadLoadCell() // define code to read the data from the Load Cell
 
 		data = (data ^ 16777215) | 1; // 16777215 is decimal of 0xFFFFFF, which is high bits in 24 digits
 		
-		
+		//data = data ^ 0x800000;
 		
 		//Send the data via hasData function
 
@@ -119,7 +127,7 @@ void LoadCell::registerCallback(LoadCellCallback* lc)
 
 void LoadCell::start()
 {
-	t = thread::(&LoadCell::ReadLoadCell, this);
+	t = std::thread(&LoadCell::ReadLoadCell, this);
 }
 
 void LoadCell::stop()

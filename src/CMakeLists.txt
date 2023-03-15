@@ -14,8 +14,12 @@ target_include_directories(cameralib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../inclu
 add_library(barcodereaderlib barcodereader.cpp)
 target_include_directories(barcodereaderlib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
+add_library(loadcelllib LoadCell.cpp)
+target_include_directories(loadcelllib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+
+
 
 add_executable(main main.cpp)
 
-target_link_libraries(main PRIVATE Threads::Threads PkgConfig::ZBar simplecameralib barcodereaderlib cameralib Qt5::Widgets ${OpenCV_LIBS})
+target_link_libraries(main loadcelllib pigpio Threads::Threads PkgConfig::ZBar simplecameralib barcodereaderlib cameralib Qt5::Widgets ${OpenCV_LIBS})
 

@@ -4,6 +4,7 @@
 #include<iostream>
 #include<thread>
 #include<vector>
+#include <pigpio.h>
 
 struct LoadCellCallback {
 	public: virtual void hasData(unsigned long weight) = 0;
@@ -25,5 +26,4 @@ public:
 	void stop();
 
 };
-
 #endif
