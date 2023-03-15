@@ -1,10 +1,71 @@
 #include "window.h"
-#include <QString>
-
+//#include <QString>
 #include <QPixmap>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+#include <QImage>
+#include <opencv2/opencv.hpp>
 
-// MAINWINDOW CONTAINER
-Window::Window(QWidget *parent)
+
+
+Window::Window() {
+    
+    
+    windowCallbackPtr -> windowPtr = this;
+    
+    camera.registerFrameAvailableCallback(windowPtr);
+    
+    barcodeReaderPtr = std::make_unique<BarcodeReader>();
+    
+    camera.start();
+    
+}
+
+
+void Window::updateAndProcessImage(cv::Mat& frame) {
+    
+    // Convert cv::Mat to QImage
+    QImage qImage(frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+    
+    
+    /*
+     * 
+     * 
+     *logic to display image in gui
+     * 
+     * 
+     * 
+     * */
+    
+    // pass frame to barcodeReader for decoding
+    windowCallbackPtr -> frameReadyForProcessing(frame);
+    
+        
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*/ MAINWINDOW CONTAINER
+/Window::Window(QWidget *parent)
     : QWidget{parent}
 {
     setWindowTitle("name_of_the_application");
@@ -182,3 +243,5 @@ void Window::transactionVerification()
 {
 
 }
+* 
+* /

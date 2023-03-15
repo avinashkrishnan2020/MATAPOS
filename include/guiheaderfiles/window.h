@@ -1,6 +1,9 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "camera/camera.h"
+#include "barcodereader/barcodereader.h"
+
 #include <QWidget>
 #include <QMainWindow>
 #include <QStackedWidget>
@@ -19,6 +22,9 @@ class Window : public QWidget
 {
     Q_OBJECT
 
+
+
+/*
 // FUNCTIONS TO OPEN AND CLOSE DATABASE CONNECTION
 public:
     QSqlDatabase myDb;
@@ -42,9 +48,51 @@ public:
             return true;
         }
     }
+*/
+
 
 public:
-    explicit Window(QWidget *parent = nullptr);
+    
+    Window(QWidget *parent = nullptr);
+    
+    
+    Window();
+    
+    
+    ~Window()
+
+    void updateAndProcessImage(cv::Mat& frame);
+    
+    struct WindowCallback: Camera::CameraCallback {
+    
+        Window* windowPtr = nullptr;
+        
+        // Inherited callback from camera class
+        virtual void frameAvailable(cv::Mat& frame) {
+            if(nullptr != windowPtr) {
+                    
+                    windowPtr -> updateAndProcessImage(frame);
+            }
+        }
+        
+        // new callback method
+        virtual void frameReadyForProcessing(cv::Mat frame) = 0;
+    
+    };
+    
+    
+    // Method is called after GUI is done displaying the frame in live feed. Frame is then
+    // ready to be picked up by another client through frameReadyForProcessing callback.
+    void registerFrameReadyForProcessingCallback(WindowCallback* clientCallbackPtr) {
+        
+        windowCallbackPtr = clientCallbackPtr;
+    }
+    
+    WindowCallback* windowCallbackPtr;
+    Camera camera;
+    std::unique_ptr<BarcodeReader> barcodeReaderPtr;
+    
+
 
 private:
     QMainWindow *mainWindow;

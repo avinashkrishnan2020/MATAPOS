@@ -37,6 +37,8 @@ public:
 	
 
 	BarcodeReaderCallback barcodeReaderCallback;
+	
+	Window window;
 
 	std::unique_ptr<Camera> cameraPtr;
 

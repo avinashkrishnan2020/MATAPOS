@@ -22,17 +22,12 @@ BarcodeReader::BarcodeReader() {
 	
 	barcodeReaderCallback.barcodeReaderPtr = this;
 	
-	
-	cameraPtr = std::make_unique<Camera>();
-	
-	cameraPtr -> registerFrameAvailableCallback(&barcodeReaderCallback);
-	
-	cameraPtr -> start();
+	window.registerFrameReadyForProcessingCallback(barcodeReaderPtr);
 
 }
 
 BarcodeReader::~BarcodeReader() {
-	cameraPtr -> stop();
+	
 	
 }
 
