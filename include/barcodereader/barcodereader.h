@@ -33,6 +33,8 @@ public:
 					barcodeReaderPtr -> decodeQRAndBarcode(frame);
 			}
 		}
+
+		virtual void decodedValueAvailable(std::string decodedValue, std::string applicationState) = 0;
 	};
 	
 
