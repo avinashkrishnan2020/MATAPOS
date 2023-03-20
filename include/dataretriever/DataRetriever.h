@@ -8,6 +8,10 @@ public:
 	DataRetriever();
 
 	~DataRetriever();
+	
+	void startDb();
+	
+	void stopDb();
 
 	void displayCustomerDetails();
 
