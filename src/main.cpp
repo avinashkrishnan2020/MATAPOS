@@ -1,10 +1,14 @@
 #include "camera/camera.h"
 #include "barcodereader/barcodereader.h"
 
-int main() {
+#include <QApplication>
+
+int main(int argc, char* argv[]) {
 	
-	std::unique_ptr<BarcodeReader> barcodeReaderPtr = std::make_unique<BarcodeReader>();
+	QApplication app(argc, argv);
 	
 	
-	return 0;
+	
+	return app.exec();
+	
 }

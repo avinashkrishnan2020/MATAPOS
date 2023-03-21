@@ -4,9 +4,8 @@
 #include <QPixmap>
 
 // MAINWINDOW CONTAINER
-Window::Window(QWidget *parent)
-    : QWidget{parent}
-{
+Window::Window(QWidget *parent): QWidget{parent} {
+    
     setWindowTitle("name_of_the_application");
 
     // SETTING THE FONT FOR THE APPLICATION
